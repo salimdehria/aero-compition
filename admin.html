@@ -3,299 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👑 ADMIN - Compétition</title>
+    <title>👑 ADMIN - AERO COMPÉTITION</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        /* Styles identiques à votre admin.html */
         body {
             font-family: 'Segoe UI', sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
+            margin: 0;
             padding: 20px;
             background: #1a2634;
         }
         .container {
+            max-width: 1000px;
+            margin: 0 auto;
             background: white;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            padding: 20px;
         }
         h1 {
             color: #1d3a5c;
-            border-bottom: 4px solid #1d3a5c;
-            padding-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            border-bottom: 3px solid #1d3a5c;
+            padding-bottom: 10px;
         }
         .admin-badge {
             background: #1d3a5c;
             color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 25px 0;
+            margin: 20px 0;
         }
         th {
             background: #1d3a5c;
             color: white;
-            padding: 15px;
-            text-align: left;
+            padding: 10px;
         }
         td {
-            padding: 15px;
-            border-bottom: 1px solid #eef2f7;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
         }
         .btn {
-            padding: 10px 18px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            margin: 3px;
+            margin: 2px;
         }
-        .btn-primary { background: #1d3a5c; color: white; }
         .btn-success { background: #27ae60; color: white; }
         .btn-danger { background: #e74c3c; color: white; }
-        .btn-warning { background: #f39c12; color: white; }
+        .btn-primary { background: #3498db; color: white; }
         .add-section {
             background: #f0f5fa;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 25px 0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
         input, select {
-            padding: 12px 15px;
+            padding: 8px;
             margin: 5px;
             border: 2px solid #dde4ec;
-            border-radius: 8px;
-        }
-        .stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            border-radius: 5px;
         }
         .qr-section {
             text-align: center;
-            margin-top: 40px;
-            padding: 25px;
+            margin-top: 30px;
+            padding: 20px;
             background: #f8faff;
-            border-radius: 15px;
+            border-radius: 10px;
         }
         #qrcode {
             display: inline-block;
-            padding: 15px;
-            background: white;
-            border-radius: 15px;
-            margin: 15px 0;
-        }
-        .clickable-name {
-            cursor: pointer;
-            color: #1d3a5c;
-            font-weight: bold;
-        }
-        .institut-badge {
-            background: #3498db;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
-        }
-        .sync-badge {
-            background: #27ae60;
-            color: white;
             padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            text-align: center;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
+            background: white;
         }
     </style>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-    <!-- PROTECTION PAR MOT DE PASSE -->
-    <script>
-        (function() {
-            const PASSWORD = "dehria12"; // CHANGEZ CE MOT DE PASSE
-            if (localStorage.getItem('admin_auth') === 'ok') return;
-            
-            const password = prompt("🔐 ACCÈS ADMINISTRATEUR\n\nEntrez le mot de passe :");
-            if (password === PASSWORD) {
-                localStorage.setItem('admin_auth', 'ok');
-            } else {
-                alert("⛔ Mot de passe incorrect !");
-                window.location.href = "index.html";
-            }
-        })();
-    </script>
-
     <div class="container">
         <h1>
-            👑 PANEL ADMINISTRATEUR
-            <span class="admin-badge">Synchronisation AUTOMATIQUE</span>
+            👑 PANEL ADMIN
+            <span class="admin-badge">AERO COMPÉTITION</span>
         </h1>
-        
-        <!-- BADGE SYNCHRONISATION -->
-        <div class="sync-badge" id="syncBadge">
-            🔄 Connecté à Firebase - Synchronisation en temps réel activée
-        </div>
-        
-        <!-- QR CODE FIXE - NE CHANGE JAMAIS -->
+
+        <!-- QR CODE FIXE -->
         <div class="qr-section">
             <h3>📱 QR CODE PERMANENT</h3>
             <div id="qrcode"></div>
-            <p style="color: #666; margin-top: 10px;">
-                🔄 Mise à jour AUTOMATIQUE - Scannez une seule fois !
-            </p>
-            <p id="visitorUrl" style="font-size: 0.9rem; word-break: break-all;"></p>
+            <p>Scannez une seule fois - Mise à jour automatique</p>
         </div>
-        
-        <!-- Ajout manuel -->
+
+        <!-- Ajout -->
         <div class="add-section">
-            <h3>➕ Ajouter un compétiteur</h3>
+            <h3>➕ Ajouter un participant</h3>
             <input type="text" id="nomInput" placeholder="Nom">
-            <input type="text" id="institutInput" placeholder="Institut" value="Non spécifié">
-            <button class="btn btn-primary" onclick="creerCompetiteur()">✨ Créer</button>
+            <input type="text" id="institutInput" placeholder="Institut">
+            <button class="btn btn-primary" onclick="creerCompetiteur()">Ajouter</button>
         </div>
-        
-        <!-- Ajout d'essai -->
-        <div class="add-section" style="background: #e8f4fd;">
+
+        <!-- Ajout essai -->
+        <div class="add-section">
             <h3>➕ Ajouter un essai</h3>
-            <select id="selectCompetiteur" style="min-width: 250px;">
-                <option value="">Choisir un compétiteur</option>
-            </select>
-            <input type="number" id="essaiInput" placeholder="Score" value="0" min="0">
-            <button class="btn btn-success" onclick="ajouterEssai()">➕ Ajouter essai</button>
+            <select id="selectCompetiteur"></select>
+            <input type="number" id="essaiInput" value="0" min="0">
+            <button class="btn btn-success" onclick="ajouterEssai()">Ajouter essai</button>
         </div>
-        
+
         <!-- Tableau -->
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Compétiteur</th>
+                    <th>Nom</th>
                     <th>Institut</th>
-                    <th>Score Total</th>
                     <th>Essais</th>
+                    <th>Total</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="tableBody">
-                <tr><td colspan="6">Chargement...</td></tr>
-            </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
-        
-        <!-- Stats -->
-        <div class="stats" id="stats">
-            <span id="totalCount">0 compétiteurs</span>
-            <span id="totalEssais">0 essais</span>
-            <span id="moyenne">Moyenne: 0</span>
-            <span id="meilleur">Meilleur: —</span>
-        </div>
     </div>
-    
+
     <script>
-        // ===== CONFIGURATION FIREBASE =====
-        // REMPLACEZ CES VALEURS AVEC VOS PROPRES CLÉS !
+        // MOT DE PASSE
+        (function() {
+            const PASSWORD = "dehria12";
+            if (localStorage.getItem('admin_auth') === 'ok') return;
+            
+            const password = prompt("Mot de passe admin:");
+            if (password === PASSWORD) {
+                localStorage.setItem('admin_auth', 'ok');
+            } else {
+                window.location.href = "index.html";
+            }
+        })();
+
+        // Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyB...",  // REMPLACEZ ICI
-            authDomain: "votre-projet.firebaseapp.com",  // REMPLACEZ ICI
-            databaseURL: "https://votre-projet-default-rtdb.firebaseio.com",  // REMPLACEZ ICI
-            projectId: "votre-projet",  // REMPLACEZ ICI
-            storageBucket: "votre-projet.appspot.com",  // REMPLACEZ ICI
-            messagingSenderId: "123456789",  // REMPLACEZ ICI
-            appId: "1:123456789:web:abc123"  // REMPLACEZ ICI
+            apiKey: "AIzaSyCUncMgmG6g3Xl7drWotu2v4zPaf8fCLP0",
+            authDomain: "aero-compition.firebaseapp.com",
+            databaseURL: "https://aero-compition-default-rtdb.firebaseio.com",
+            projectId: "aero-compition",
+            storageBucket: "aero-compition.firebasestorage.app",
+            messagingSenderId: "717421617215",
+            appId: "1:717421617215:web:64d54ebb8bba5a52a6d88a"
         };
-        
-        // Initialiser Firebase
+
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const scoresRef = database.ref('competition/scores');
-        
-        // ===== VARIABLES =====
+
         let competitors = [];
-        
-        // ===== CHARGEMENT INITIAL =====
-        function loadData() {
-            // Écouter les changements en TEMPS RÉEL
-            scoresRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    competitors = data;
-                    console.log("✅ Données reçues de Firebase:", competitors.length, "compétiteurs");
-                } else {
-                    // Première fois - données par défaut
-                    setDefaultData();
-                }
+
+        // Charger données
+        scoresRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                competitors = data;
                 renderTable();
                 updateSelect();
-            }, (error) => {
-                console.error("❌ Erreur Firebase:", error);
-                // Fallback sur localStorage
-                const saved = localStorage.getItem('scores_backup');
-                if (saved) {
-                    competitors = JSON.parse(saved);
-                    renderTable();
-                }
-            });
-        }
-        
-        // ===== DONNÉES PAR DÉFAUT =====
-        function setDefaultData() {
-            competitors = [
-                { id: '1', name: 'Léa', institut: 'INSAT', essais: [85, 92, 78] },
-                { id: '2', name: 'Thomas', institut: 'ENIT', essais: [75, 88, 95] },
-                { id: '3', name: 'Inès', institut: 'FST', essais: [92, 88, 96] },
-                { id: '4', name: 'Raj', institut: 'ISSAT', essais: [65, 72, 80] }
-            ];
-            saveToFirebase();
-        }
-        
-        // ===== SAUVEGARDER DANS FIREBASE =====
+            } else {
+                // Données par défaut
+                competitors = [
+                    { id: '1', name: 'Test', institut: 'AERO', essais: [10, 20] }
+                ];
+                saveToFirebase();
+            }
+        });
+
         function saveToFirebase() {
-            scoresRef.set(competitors)
-                .then(() => {
-                    console.log("✅ Sauvegardé dans Firebase");
-                    // Backup localStorage
-                    localStorage.setItem('scores_backup', JSON.stringify(competitors));
-                })
-                .catch(error => {
-                    console.error("❌ Erreur sauvegarde Firebase:", error);
-                });
+            scoresRef.set(competitors);
         }
-        
-        // ===== CRÉER COMPÉTITEUR =====
+
+        function updateSelect() {
+            const select = document.getElementById('selectCompetiteur');
+            let options = '<option value="">Choisir...</option>';
+            competitors.forEach(c => {
+                options += `<option value="${c.id}">${c.name}</option>`;
+            });
+            select.innerHTML = options;
+        }
+
+        function calculerTotal(essais) {
+            return essais.reduce((s, v) => s + v, 0);
+        }
+
+        function renderTable() {
+            let html = '';
+            competitors.forEach(comp => {
+                html += `
+                    <tr>
+                        <td>${comp.name}</td>
+                        <td>${comp.institut}</td>
+                        <td>${comp.essais.join(', ')}</td>
+                        <td><strong>${calculerTotal(comp.essais)}</strong></td>
+                        <td>
+                            <button class="btn btn-success" onclick="ajouterEssaiRapide('${comp.id}')">➕</button>
+                            <button class="btn btn-danger" onclick="supprimerCompetiteur('${comp.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('tableBody').innerHTML = html;
+        }
+
         window.creerCompetiteur = function() {
             const nom = document.getElementById('nomInput').value.trim();
-            const institut = document.getElementById('institutInput').value.trim() || 'Non spécifié';
+            const institut = document.getElementById('institutInput').value.trim() || 'AERO';
             
-            if (!nom) {
-                alert('Entrez un nom');
-                return;
-            }
-            
-            if (competitors.some(c => c.name.toLowerCase() === nom.toLowerCase())) {
-                alert('Ce nom existe déjà');
-                return;
-            }
+            if (!nom) return alert('Entrez un nom');
             
             const newComp = {
-                id: Date.now() + '-' + Math.random(),
+                id: Date.now() + '',
                 name: nom,
                 institut: institut,
                 essais: []
@@ -305,176 +229,47 @@
             saveToFirebase();
             document.getElementById('nomInput').value = '';
         };
-        
-        // ===== AJOUTER ESSAI =====
+
         window.ajouterEssai = function() {
-            const compId = document.getElementById('selectCompetiteur').value;
+            const id = document.getElementById('selectCompetiteur').value;
             const score = parseInt(document.getElementById('essaiInput').value);
             
-            if (!compId) {
-                alert('Choisissez un compétiteur');
-                return;
-            }
+            if (!id) return alert('Choisissez un participant');
+            if (isNaN(score)) return alert('Score invalide');
             
-            if (isNaN(score) || score < 0) {
-                alert('Score invalide');
-                return;
-            }
-            
-            const comp = competitors.find(c => c.id === compId);
+            const comp = competitors.find(c => c.id === id);
             if (comp) {
                 comp.essais.push(score);
                 saveToFirebase();
-                document.getElementById('essaiInput').value = '0';
             }
         };
-        
-        // ===== AJOUTER ESSAI RAPIDE =====
+
         window.ajouterEssaiRapide = function(id) {
-            const score = prompt('Score du nouvel essai:', '0');
+            const score = prompt('Score:');
             if (score !== null) {
                 const val = parseInt(score);
-                if (!isNaN(val) && val >= 0) {
+                if (!isNaN(val)) {
                     const comp = competitors.find(c => c.id === id);
                     comp.essais.push(val);
                     saveToFirebase();
                 }
             }
         };
-        
-        // ===== SUPPRIMER COMPÉTITEUR =====
+
         window.supprimerCompetiteur = function(id) {
-            if (confirm('Supprimer ce compétiteur ?')) {
+            if (confirm('Supprimer ?')) {
                 competitors = competitors.filter(c => c.id !== id);
                 saveToFirebase();
             }
         };
-        
-        // ===== MODIFIER ESSAI =====
-        window.modifierEssai = function(id, index) {
-            const comp = competitors.find(c => c.id === id);
-            const newScore = prompt(`Modifier essai #${index + 1}:`, comp.essais[index]);
-            if (newScore !== null) {
-                const val = parseInt(newScore);
-                if (!isNaN(val) && val >= 0) {
-                    comp.essais[index] = val;
-                    saveToFirebase();
-                }
-            }
-        };
-        
-        // ===== SUPPRIMER ESSAI =====
-        window.supprimerEssai = function(id, index) {
-            if (confirm('Supprimer cet essai ?')) {
-                const comp = competitors.find(c => c.id === id);
-                comp.essais.splice(index, 1);
-                saveToFirebase();
-            }
-        };
-        
-        // ===== CALCULER TOTAL =====
-        function calculerTotal(essais) {
-            return essais.reduce((s, v) => s + v, 0);
-        }
-        
-        // ===== METTRE À JOUR SELECT =====
-        function updateSelect() {
-            const select = document.getElementById('selectCompetiteur');
-            let options = '<option value="">Choisir un compétiteur</option>';
-            competitors.forEach(comp => {
-                options += `<option value="${comp.id}">${comp.name} (${comp.institut}) - ${comp.essais.length} essais</option>`;
-            });
-            select.innerHTML = options;
-        }
-        
-        // ===== RENDU TABLEAU =====
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            
-            if (!competitors || competitors.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucun compétiteur</td></tr>';
-                updateStats();
-                return;
-            }
-            
-            // Trier par score total décroissant
-            const sorted = [...competitors].sort((a, b) => 
-                calculerTotal(b.essais) - calculerTotal(a.essais)
-            );
-            
-            let html = '';
-            sorted.forEach((comp, index) => {
-                const total = calculerTotal(comp.essais);
-                let rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-                
-                html += `
-                    <tr>
-                        <td class="${rankClass}">#${index + 1}</td>
-                        <td>
-                            <span class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</span>
-                        </td>
-                        <td><span class="institut-badge">${comp.institut}</span></td>
-                        <td><strong>${total}</strong></td>
-                        <td>${comp.essais.length}</td>
-                        <td>
-                            <button class="btn btn-success btn-small" onclick="ajouterEssaiRapide('${comp.id}')">➕</button>
-                            <button class="btn btn-danger btn-small" onclick="supprimerCompetiteur('${comp.id}')">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
-            updateStats(sorted);
-        }
-        
-        // ===== METTRE À JOUR STATS =====
-        function updateStats(sorted) {
-            const totalCompetiteurs = competitors.length;
-            const totalEssais = competitors.reduce((acc, c) => acc + c.essais.length, 0);
-            
-            document.getElementById('totalCount').textContent = `${totalCompetiteurs} compétiteurs`;
-            document.getElementById('totalEssais').textContent = `${totalEssais} essais`;
-            
-            if (sorted && sorted.length > 0) {
-                const sum = sorted.reduce((acc, c) => acc + calculerTotal(c.essais), 0);
-                document.getElementById('moyenne').textContent = `Moyenne: ${Math.round(sum / sorted.length)}`;
-                
-                const best = sorted[0];
-                document.getElementById('meilleur').textContent = `Meilleur: ${best.name} (${calculerTotal(best.essais)})`;
-            }
-        }
-        
-        // ===== AFFICHER DÉTAILS =====
-        window.afficherDetails = function(id) {
-            const comp = competitors.find(c => c.id === id);
-            if (!comp) return;
-            
-            let details = `📊 ${comp.name} (${comp.institut})\n`;
-            details += `Total: ${calculerTotal(comp.essais)}\n`;
-            details += `Essais: ${comp.essais.join(', ')}`;
-            alert(details);
-        };
-        
-        // ===== GÉNÉRER QR CODE FIXE =====
-        function genererQR() {
-            const baseUrl = window.location.href.replace('admin.html', 'index.html');
-            document.getElementById('visitorUrl').textContent = baseUrl;
-            
-            const qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = '';
-            new QRCode(qrDiv, {
-                text: baseUrl,
-                width: 200,
-                height: 200
-            });
-        }
-        
-        // ===== INITIALISATION =====
-        window.onload = function() {
-            genererQR();
-            loadData();
-        };
+
+        // QR Code
+        const url = window.location.href.replace('admin.html', 'index.html');
+        new QRCode(document.getElementById('qrcode'), {
+            text: url,
+            width: 200,
+            height: 200
+        });
     </script>
 </body>
 </html>
