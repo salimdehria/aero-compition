@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>👁️ VISITEUR - Compétition par essais</title>
     <style>
         body {
@@ -205,12 +206,43 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         select {
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #2c3e50;
+        }
+        
+        .sync-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        
+        .sync-btn:hover {
+            background: #2ecc71;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 2000;
         }
     </style>
 </head>
@@ -226,12 +258,15 @@
             <p>👆 Cliquez sur les noms pour voir les essais</p>
         </div>
         
-        <!-- Filtre par institut -->
+        <!-- Filtre par institut avec bouton refresh -->
         <div class="filtre-section">
             <label>Filtrer par institut:</label>
             <select id="filtreInstitut" onchange="appliquerFiltre()">
                 <option value="all">Tous</option>
             </select>
+            <button class="sync-btn" onclick="forcerRafraichissement()">
+                🔄 Rafraîchir
+            </button>
         </div>
         
         <!-- Podium -->
@@ -272,20 +307,60 @@
         </div>
     </div>
     
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+    
     <script>
         const STORAGE_KEY = 'scores_essais_complets';
         let competitors = [];
         let filtreInstitut = 'all';
         
+        // ===== DONNÉES PAR DÉFAUT =====
+        // Ces données apparaîtront TOUJOURS si rien n'est dans localStorage
+        const DEFAULT_DATA = [
+            { id: '1', name: 'Léa', institut: 'INSAT', essais: [85, 92, 78] },
+            { id: '2', name: 'Thomas', institut: 'ENIT', essais: [75, 88, 95] },
+            { id: '3', name: 'Inès', institut: 'FST', essais: [92, 88, 96] },
+            { id: '4', name: 'Raj', institut: 'ISSAT', essais: [65, 72, 80] },
+            { id: '5', name: 'Sophie', institut: 'INSAT', essais: [45, 67] },
+            { id: '6', name: 'Marc', institut: 'ENIT', essais: [0, 0, 0] }
+        ];
+        
+        // ===== FONCTION PRINCIPALE DE CHARGEMENT =====
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
+            
             if (saved) {
-                competitors = JSON.parse(saved);
+                try {
+                    competitors = JSON.parse(saved);
+                    console.log("✅ Données chargées depuis localStorage:", competitors.length, "compétiteurs");
+                    
+                    // Vérifier que les données sont valides
+                    if (!Array.isArray(competitors) || competitors.length === 0) {
+                        throw new Error("Données invalides");
+                    }
+                } catch(e) {
+                    console.error("❌ Erreur de parsing, utilisation des données par défaut", e);
+                    useDefaultData();
+                }
+            } else {
+                console.log("ℹ️ localStorage vide, utilisation des données par défaut");
+                useDefaultData();
             }
+            
             updateFiltre();
             renderTable();
         }
         
+        // ===== UTILISER LES DONNÉES PAR DÉFAUT =====
+        function useDefaultData() {
+            competitors = JSON.parse(JSON.stringify(DEFAULT_DATA)); // Copie profonde
+            // Optionnel : sauvegarder dans localStorage pour la prochaine fois
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(competitors));
+            showNotification("✅ Données d'exemple chargées");
+        }
+        
+        // ===== METTRE À JOUR LE FILTRE =====
         function updateFiltre() {
             const instituts = [...new Set(competitors.map(c => c.institut))];
             const select = document.getElementById('filtreInstitut');
@@ -295,15 +370,18 @@
             select.value = filtreInstitut;
         }
         
+        // ===== APPLIQUER LE FILTRE =====
         window.appliquerFiltre = function() {
             filtreInstitut = document.getElementById('filtreInstitut').value;
             renderTable();
         };
         
+        // ===== CALCULER LE TOTAL =====
         function calculerTotal(essais) {
             return essais.reduce((s, v) => s + v, 0);
         }
         
+        // ===== OBTENIR LES DONNÉES FILTRÉES ET TRIÉES =====
         function getData() {
             let filtered = competitors;
             if (filtreInstitut !== 'all') {
@@ -312,13 +390,14 @@
             return filtered.sort((a, b) => calculerTotal(b.essais) - calculerTotal(a.essais));
         }
         
+        // ===== RENDU DU TABLEAU =====
         function renderTable() {
             const data = getData();
             const tbody = document.getElementById('tableBody');
             
             let html = '';
             if (data.length === 0) {
-                html = '<tr><td colspan="5">Aucun compétiteur</td></tr>';
+                html = '<tr><td colspan="5" style="text-align: center; padding: 40px;">📭 Aucun compétiteur</td></tr>';
             } else {
                 data.forEach((comp, i) => {
                     const total = calculerTotal(comp.essais);
@@ -340,6 +419,7 @@
             
             tbody.innerHTML = html;
             
+            // Podium
             const podium = document.getElementById('podium');
             if (data.length >= 3) {
                 podium.innerHTML = '';
@@ -358,15 +438,36 @@
                 podium.innerHTML = '';
             }
             
+            // Stats
             document.getElementById('totalCount').textContent = `${data.length} compétiteurs`;
             if (data.length > 0) {
                 const sum = data.reduce((a, c) => a + calculerTotal(c.essais), 0);
                 document.getElementById('moyenne').textContent = `Moyenne: ${Math.round(sum / data.length)}`;
                 const best = data[0];
                 document.getElementById('meilleur').textContent = `Meilleur: ${best.name} (${calculerTotal(best.essais)})`;
+            } else {
+                document.getElementById('moyenne').textContent = `Moyenne: 0`;
+                document.getElementById('meilleur').textContent = `Meilleur: —`;
             }
         }
         
+        // ===== FORCER LE RAFRAÎCHISSEMENT =====
+        window.forcerRafraichissement = function() {
+            loadData();
+            showNotification("✅ Données rafraîchies !");
+        };
+        
+        // ===== AFFICHER UNE NOTIFICATION =====
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 2000);
+        }
+        
+        // ===== AFFICHER LES DÉTAILS =====
         window.afficherDetails = function(id) {
             const comp = competitors.find(c => c.id === id);
             if (!comp) return;
@@ -388,20 +489,38 @@
             document.getElementById('essaisModal').style.display = 'block';
         };
         
+        // ===== FERMER LA MODAL =====
         window.fermerModal = function() {
             document.getElementById('essaisModal').style.display = 'none';
         };
         
+        // ===== ÉCOUTEUR DE CHANGEMENTS STORAGE =====
         window.addEventListener('storage', e => {
-            if (e.key === STORAGE_KEY) loadData();
+            if (e.key === STORAGE_KEY) {
+                console.log("🔄 Changement détecté dans localStorage");
+                loadData();
+            }
         });
         
+        // ===== FERMER LA MODAL EN CLIQUANT À L'EXTÉRIEUR =====
         window.onclick = e => {
-            if (e.target === document.getElementById('essaisModal')) fermerModal();
+            if (e.target === document.getElementById('essaisModal')) {
+                fermerModal();
+            }
         };
         
-        setInterval(loadData, 2000);
+        // ===== INITIALISATION =====
+        // Vérifier si on vient de sync.html
+        (function checkForSync() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('synced') === 'true') {
+                showNotification("✅ Données synchronisées !");
+            }
+        })();
+        
+        // Charger les données et mettre à jour toutes les 2 secondes
         loadData();
+        setInterval(loadData, 2000);
     </script>
 </body>
 </html>
