@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>🔄 Synchronisation - Compétition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f5fa;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #1d3a5c; }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .btn {
+            background: #1d3a5c;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #2b4a6f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Synchronisation des données</h1>
+        
+        <div id="message">
+            <p>Traitement en cours...</p>
+        </div>
+        
+        <div id="actions" style="display: none;">
+            <a href="index.html" class="btn">📊 Voir les scores</a>
+            <button onclick="retour()" class="btn">⬅️ Retour</button>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'scores_essais_complets';
+        
+        // Récupérer les données de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const data = urlParams.get('data');
+        const messageDiv = document.getElementById('message');
+        const actionsDiv = document.getElementById('actions');
+        
+        if (data) {
+            try {
+                const decodedData = JSON.parse(decodeURIComponent(data));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(decodedData));
+                
+                messageDiv.innerHTML = `
+                    <div class="success">
+                        <h2>✅ Synchronisation réussie !</h2>
+                        <p>${decodedData.length} compétiteurs mis à jour</p>
+                        <p>${decodedData.reduce((acc, c) => acc + c.essais.length, 0)} essais au total</p>
+                    </div>
+                `;
+                actionsDiv.style.display = 'block';
+            } catch(e) {
+                messageDiv.innerHTML = `
+                    <div class="error">
+                        <h2>❌ Erreur de synchronisation</h2>
+                        <p>Les données sont corrompues ou invalides</p>
+                    </div>
+                `;
+            }
+        } else {
+            messageDiv.innerHTML = `
+                <div class="error">
+                    <h2>❌ Aucune donnée reçue</h2>
+                    <p>Utilisez le bouton de synchronisation dans la page admin</p>
+                </div>
+            `;
+        }
+        
+        function retour() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

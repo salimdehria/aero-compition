@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>👁️ VISITEUR - Compétition par essais</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #2c3e50;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #2c3e50;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .visitor-badge {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
+        }
+        
+        .institut-badge {
+            background: #3498db;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eef2f7;
+        }
+        
+        tr:hover {
+            background: #f8faff;
+        }
+        
+        .clickable-name {
+            cursor: pointer;
+            color: #2c3e50;
+            font-weight: bold;
+            position: relative;
+            padding-right: 25px;
+        }
+        
+        .clickable-name::after {
+            content: "👆";
+            position: absolute;
+            right: 0;
+            opacity: 0.6;
+        }
+        
+        .clickable-name:hover {
+            color: #3498db;
+        }
+        
+        .score {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+        
+        .rank-1 { color: gold; font-weight: bold; }
+        .rank-2 { color: silver; font-weight: bold; }
+        .rank-3 { color: #cd7f32; font-weight: bold; }
+        
+        .info-box {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid #2c3e50;
+        }
+        
+        .stats {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .refresh-badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .podium {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8faff;
+            border-radius: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .podium-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 120px;
+            cursor: pointer;
+        }
+        
+        .podium-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .podium-1 { background: gold; }
+        .podium-2 { background: silver; }
+        .podium-3 { background: #cd7f32; color: white; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 30px;
+            border-radius: 20px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 15px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .essai-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f5fa;
+            border-radius: 8px;
+        }
+        
+        .filtre-section {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            👁️ ESPACE VISITEUR
+            <span class="visitor-badge">Lecture seule</span>
+        </h1>
+        
+        <div class="info-box">
+            <span class="refresh-badge">🔄 Mise à jour en temps réel</span>
+            <p>👆 Cliquez sur les noms pour voir les essais</p>
+        </div>
+        
+        <!-- Filtre par institut -->
+        <div class="filtre-section">
+            <label>Filtrer par institut:</label>
+            <select id="filtreInstitut" onchange="appliquerFiltre()">
+                <option value="all">Tous</option>
+            </select>
+        </div>
+        
+        <!-- Podium -->
+        <div id="podium" class="podium"></div>
+        
+        <!-- Tableau -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Compétiteur</th>
+                    <th>Institut</th>
+                    <th>Score Total</th>
+                    <th>Essais</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="5">Chargement...</td></tr>
+            </tbody>
+        </table>
+        
+        <!-- Stats -->
+        <div class="stats" id="stats">
+            <span id="totalCount">0</span>
+            <span id="moyenne">Moyenne: 0</span>
+            <span id="meilleur">Meilleur: —</span>
+        </div>
+    </div>
+    
+    <!-- Modal détails -->
+    <div id="essaisModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalNom">Détail</h2>
+                <button class="close-btn" onclick="fermerModal()">&times;</button>
+            </div>
+            <div id="modalContenu"></div>
+        </div>
+    </div>
+    
+    <script>
+        const STORAGE_KEY = 'scores_essais_complets';
+        let competitors = [];
+        let filtreInstitut = 'all';
+        
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                competitors = JSON.parse(saved);
+            }
+            updateFiltre();
+            renderTable();
+        }
+        
+        function updateFiltre() {
+            const instituts = [...new Set(competitors.map(c => c.institut))];
+            const select = document.getElementById('filtreInstitut');
+            let options = '<option value="all">Tous les instituts</option>';
+            instituts.forEach(i => options += `<option value="${i}">${i}</option>`);
+            select.innerHTML = options;
+            select.value = filtreInstitut;
+        }
+        
+        window.appliquerFiltre = function() {
+            filtreInstitut = document.getElementById('filtreInstitut').value;
+            renderTable();
+        };
+        
+        function calculerTotal(essais) {
+            return essais.reduce((s, v) => s + v, 0);
+        }
+        
+        function getData() {
+            let filtered = competitors;
+            if (filtreInstitut !== 'all') {
+                filtered = competitors.filter(c => c.institut === filtreInstitut);
+            }
+            return filtered.sort((a, b) => calculerTotal(b.essais) - calculerTotal(a.essais));
+        }
+        
+        function renderTable() {
+            const data = getData();
+            const tbody = document.getElementById('tableBody');
+            
+            let html = '';
+            if (data.length === 0) {
+                html = '<tr><td colspan="5">Aucun compétiteur</td></tr>';
+            } else {
+                data.forEach((comp, i) => {
+                    const total = calculerTotal(comp.essais);
+                    let rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+                    
+                    html += `
+                        <tr>
+                            <td class="${rankClass}">#${i + 1}</td>
+                            <td>
+                                <span class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</span>
+                            </td>
+                            <td><span class="institut-badge">${comp.institut}</span></td>
+                            <td class="score">${total}</td>
+                            <td>${comp.essais.length}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            tbody.innerHTML = html;
+            
+            const podium = document.getElementById('podium');
+            if (data.length >= 3) {
+                podium.innerHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    const comp = data[i];
+                    podium.innerHTML += `
+                        <div class="podium-item podium-${i+1}" onclick="afficherDetails('${comp.id}')">
+                            <div style="font-size: 2rem;">${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</div>
+                            <div>${comp.name}</div>
+                            <div style="font-size: 1.3rem;">${calculerTotal(comp.essais)}</div>
+                            <div>${comp.institut}</div>
+                        </div>
+                    `;
+                }
+            } else {
+                podium.innerHTML = '';
+            }
+            
+            document.getElementById('totalCount').textContent = `${data.length} compétiteurs`;
+            if (data.length > 0) {
+                const sum = data.reduce((a, c) => a + calculerTotal(c.essais), 0);
+                document.getElementById('moyenne').textContent = `Moyenne: ${Math.round(sum / data.length)}`;
+                const best = data[0];
+                document.getElementById('meilleur').textContent = `Meilleur: ${best.name} (${calculerTotal(best.essais)})`;
+            }
+        }
+        
+        window.afficherDetails = function(id) {
+            const comp = competitors.find(c => c.id === id);
+            if (!comp) return;
+            
+            document.getElementById('modalNom').textContent = `${comp.name} - ${comp.institut}`;
+            
+            let html = `<p><strong>Total:</strong> ${calculerTotal(comp.essais)}</p>`;
+            html += `<p><strong>${comp.essais.length} essais:</strong></p>`;
+            
+            if (comp.essais.length === 0) {
+                html += '<p>Aucun essai</p>';
+            } else {
+                comp.essais.forEach((e, i) => {
+                    html += `<div class="essai-item">Essai #${i + 1}: ${e}</div>`;
+                });
+            }
+            
+            document.getElementById('modalContenu').innerHTML = html;
+            document.getElementById('essaisModal').style.display = 'block';
+        };
+        
+        window.fermerModal = function() {
+            document.getElementById('essaisModal').style.display = 'none';
+        };
+        
+        window.addEventListener('storage', e => {
+            if (e.key === STORAGE_KEY) loadData();
+        });
+        
+        window.onclick = e => {
+            if (e.target === document.getElementById('essaisModal')) fermerModal();
+        };
+        
+        setInterval(loadData, 2000);
+        loadData();
+    </script>
+</body>
+</html>
