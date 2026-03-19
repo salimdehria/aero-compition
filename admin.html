@@ -2,24 +2,23 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>👑 ADMIN - Compétition par essais</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 ADMIN - Compétition</title>
     <style>
-        /* Tous les styles existants RESTENT IDENTIQUES */
+        /* Styles identiques à votre admin.html */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 0 auto;
             padding: 20px;
             background: #1a2634;
         }
-        
         .container {
             background: white;
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        
         h1 {
             color: #1d3a5c;
             border-bottom: 4px solid #1d3a5c;
@@ -29,262 +28,50 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-        
         .admin-badge {
             background: #1d3a5c;
             color: white;
             padding: 8px 20px;
             border-radius: 40px;
-            font-size: 1rem;
         }
-        
-        .warning-message {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #ffeeba;
-            display: none;
-        }
-        
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-        
-        .institut-badge {
-            background: #3498db;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-left: 8px;
-        }
-        
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 25px 0;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
         th {
             background: #1d3a5c;
             color: white;
             padding: 15px;
             text-align: left;
-            font-size: 1.1rem;
         }
-        
         td {
             padding: 15px;
             border-bottom: 1px solid #eef2f7;
-            vertical-align: middle;
         }
-        
-        tr:hover {
-            background: #f8faff;
-        }
-        
-        .clickable-name {
-            cursor: pointer;
-            color: #1d3a5c;
-            font-weight: bold;
-            position: relative;
-            padding-right: 25px;
-            transition: all 0.2s;
-        }
-        
-        .clickable-name:hover {
-            color: #3498db;
-            transform: translateX(5px);
-        }
-        
-        .clickable-name::after {
-            content: "🔍";
-            position: absolute;
-            right: 0;
-            opacity: 0.6;
-            font-size: 0.9rem;
-        }
-        
-        .essais-indicator {
-            display: inline-block;
-            background: #e8f4fd;
-            color: #1d3a5c;
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 10px;
-            border: 1px solid #1d3a5c;
-        }
-        
-        .rank {
-            font-weight: bold;
-            color: #666;
-            width: 50px;
-        }
-        
-        .rank-1 { color: gold; font-weight: bold; }
-        .rank-2 { color: silver; font-weight: bold; }
-        .rank-3 { color: #cd7f32; font-weight: bold; }
-        
-        .score {
-            font-weight: bold;
-            color: #1d3a5c;
-            font-size: 1.3rem;
-        }
-        
         .btn {
             padding: 10px 18px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.95rem;
             margin: 3px;
-            font-weight: 500;
-            transition: all 0.2s;
         }
-        
-        .btn-primary {
-            background: #1d3a5c;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2b4a6f;
-            transform: translateY(-2px);
-        }
-        
-        .btn-success {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: #2ecc71;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-info {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-info:hover {
-            background: #2980b9;
-        }
-        
-        .btn-essai {
-            background: #9b59b6;
-            color: white;
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-        
-        .btn-edit {
-            background: #f39c12;
-            color: white;
-        }
-        
+        .btn-primary { background: #1d3a5c; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
         .add-section {
             background: #f0f5fa;
             padding: 25px;
             border-radius: 15px;
             margin: 25px 0;
-            border: 2px dashed #1d3a5c;
         }
-        
-        .import-section {
-            background: #e8f4fd;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 25px 0;
-            border: 2px solid #3498db;
-        }
-        
-        .import-section h3 {
-            margin-top: 0;
-            color: #2980b9;
-        }
-        
-        .format-example {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            margin: 10px 0;
-            border-left: 4px solid #3498db;
-            white-space: pre-wrap;
-        }
-        
-        input, select, textarea {
+        input, select {
             padding: 12px 15px;
             margin: 5px;
             border: 2px solid #dde4ec;
             border-radius: 8px;
-            font-size: 1rem;
         }
-        
-        textarea {
-            width: 100%;
-            max-width: 600px;
-            height: 150px;
-            font-family: monospace;
-            resize: vertical;
-        }
-        
-        .file-input {
-            border: 2px dashed #3498db;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            width: auto;
-            cursor: pointer;
-        }
-        
-        .qr-section {
-            text-align: center;
-            margin-top: 40px;
-            padding: 25px;
-            background: #f8faff;
-            border-radius: 15px;
-            border: 1px solid #d0ddee;
-        }
-        
-        #qrcode {
-            display: inline-block;
-            padding: 15px;
-            background: white;
-            border-radius: 15px;
-            margin: 15px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
         .stats {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -293,166 +80,51 @@
             margin: 20px 0;
             display: flex;
             justify-content: space-around;
-            font-size: 1.1rem;
             flex-wrap: wrap;
-            gap: 10px;
         }
-        
-        .visitor-link {
+        .qr-section {
             text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f0f7ff;
-            border-radius: 50px;
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8faff;
+            border-radius: 15px;
         }
-        
-        .visitor-link a {
+        #qrcode {
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+        .clickable-name {
+            cursor: pointer;
             color: #1d3a5c;
             font-weight: bold;
-            text-decoration: none;
-            font-size: 1.2rem;
-            padding: 10px 30px;
-            border: 2px solid #1d3a5c;
-            border-radius: 40px;
         }
-        
-        .visitor-link a:hover {
-            background: #1d3a5c;
+        .institut-badge {
+            background: #3498db;
             color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
         }
-        
-        .sort-controls {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .sort-btn {
-            background: #f0f5fa;
-            border: 2px solid #1d3a5c;
-            padding: 8px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .unique-badge {
+        .sync-badge {
             background: #27ae60;
             color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-left: 10px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background: white;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #1d3a5c;
-            padding-bottom: 15px;
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 10;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .close-btn:hover {
-            color: #e74c3c;
-        }
-        
-        .detail-hint {
-            background: #ffd966;
-            color: #1d3a5c;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .backup-section {
-            background: #e8f4fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid #27ae60;
-        }
-        
-        .backup-section h4 {
-            margin: 0 0 10px 0;
-            color: #27ae60;
-        }
-        
-        .essai-item {
             padding: 10px;
-            margin: 5px 0;
-            background: #f0f5fa;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .essai-item span {
-            font-weight: bold;
-            color: #1d3a5c;
-        }
-        
-        /* Nouveaux styles pour l'édition */
-        .edit-form {
-            background: #fff3e0;
-            padding: 15px;
             border-radius: 8px;
             margin: 10px 0;
+            text-align: center;
+            animation: pulse 2s infinite;
         }
-        
-        .edit-input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 2px solid #f39c12;
-            border-radius: 5px;
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
     </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -460,20 +132,14 @@
     <script>
         (function() {
             const PASSWORD = "dehria12"; // CHANGEZ CE MOT DE PASSE
-            
-            if (localStorage.getItem('admin_auth') === 'ok') {
-                console.log('✅ Accès admin autorisé');
-                return;
-            }
+            if (localStorage.getItem('admin_auth') === 'ok') return;
             
             const password = prompt("🔐 ACCÈS ADMINISTRATEUR\n\nEntrez le mot de passe :");
-            
             if (password === PASSWORD) {
                 localStorage.setItem('admin_auth', 'ok');
-                alert("✅ Accès autorisé ! Bienvenue.");
             } else {
-                alert("⛔ Mot de passe incorrect ! Redirection vers la page visiteur.");
-                window.location.href = "visiteur.html";
+                alert("⛔ Mot de passe incorrect !");
+                window.location.href = "index.html";
             }
         })();
     </script>
@@ -481,66 +147,30 @@
     <div class="container">
         <h1>
             👑 PANEL ADMINISTRATEUR
-            <span class="admin-badge">Gestion des essais</span>
+            <span class="admin-badge">Synchronisation AUTOMATIQUE</span>
         </h1>
         
-        <div class="visitor-link">
-            <a href="visiteur.html" target="_blank">📱 Ouvrir la page VISITEUR</a>
+        <!-- BADGE SYNCHRONISATION -->
+        <div class="sync-badge" id="syncBadge">
+            🔄 Connecté à Firebase - Synchronisation en temps réel activée
         </div>
         
-        <div id="warningMessage" class="warning-message">⚠️ Attention !</div>
-        <div id="successMessage" class="success-message">✅ Succès !</div>
-        
-        <!-- Section IMPORT/EXPORT COMPLET -->
-        <div class="import-section">
-            <h3>📂 SAUVEGARDE COMPLÈTE DES DONNÉES</h3>
-            <p>Format: <strong>Nom,Institut,Essai1,Essai2,Essai3,...</strong></p>
-            
-            <div class="format-example">
-                Exemple de fichier complet:<br>
-                # Format: Nom,Institut,Essai1,Essai2,...<br>
-                Léa,INSAT,85,92,78<br>
-                Thomas,ENIT,75,88,95<br>
-                Inès,FST,92,88,96<br>
-                Raj,ISSAT,65,72,80<br>
-                Sophie,INSAT,45,67<br>
-                Marc,ENIT,0,0,0
-            </div>
-            
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
-                <div style="flex: 1; min-width: 250px;">
-                    <h4>📥 Importer une sauvegarde</h4>
-                    <input type="file" id="fileInput" accept=".txt" class="file-input" style="width: 100%;">
-                    <button class="btn btn-info" onclick="importerFichier()" style="margin-top: 10px; width: 100%;">📥 Importer le fichier</button>
-                </div>
-                
-                <div style="flex: 2;">
-                    <h4>📋 Coller des données</h4>
-                    <textarea id="texteImport" placeholder="Collez votre sauvegarde ici...&#10;Léa,INSAT,85,92,78&#10;Thomas,ENIT,75,88,95"></textarea>
-                    <button class="btn btn-info" onclick="importerTexte()" style="margin-top: 5px;">📋 Importer le texte</button>
-                </div>
-            </div>
-            
-            <div class="backup-section">
-                <h4>💾 EXPORTER TOUTES LES DONNÉES</h4>
-                <p>Ce fichier contient TOUS les compétiteurs avec leurs instituts et TOUS leurs essais.</p>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="exporterFichier()" style="flex: 1;">📤 Exporter en fichier texte</button>
-                    <button class="btn btn-primary" onclick="exporterJSON()" style="flex: 1;">📊 Exporter en JSON</button>
-                </div>
-                <p style="margin-top: 10px; font-size: 0.9rem;">
-                    <span class="count-badge" id="importCount">0 compétiteurs</span>
-                    <span class="count-badge" id="totalEssais">0 essais</span>
-                </p>
-            </div>
+        <!-- QR CODE FIXE - NE CHANGE JAMAIS -->
+        <div class="qr-section">
+            <h3>📱 QR CODE PERMANENT</h3>
+            <div id="qrcode"></div>
+            <p style="color: #666; margin-top: 10px;">
+                🔄 Mise à jour AUTOMATIQUE - Scannez une seule fois !
+            </p>
+            <p id="visitorUrl" style="font-size: 0.9rem; word-break: break-all;"></p>
         </div>
         
         <!-- Ajout manuel -->
         <div class="add-section">
-            <h3>➕ Ajouter un compétiteur <span class="unique-badge">Noms uniques</span></h3>
-            <input type="text" id="nomInput" placeholder="Nom" oninput="verifierNomUnique()">
+            <h3>➕ Ajouter un compétiteur</h3>
+            <input type="text" id="nomInput" placeholder="Nom">
             <input type="text" id="institutInput" placeholder="Institut" value="Non spécifié">
-            <button class="btn btn-primary" onclick="creerCompetiteur()" id="creerBtn">✨ Créer (0 essai)</button>
+            <button class="btn btn-primary" onclick="creerCompetiteur()">✨ Créer</button>
         </div>
         
         <!-- Ajout d'essai -->
@@ -553,25 +183,15 @@
             <button class="btn btn-success" onclick="ajouterEssai()">➕ Ajouter essai</button>
         </div>
         
-        <!-- Filtre par institut -->
-        <div class="sort-controls">
-            <span>📊 Filtrer par institut:</span>
-            <select id="filtreInstitut" onchange="appliquerFiltre()">
-                <option value="all">Tous les instituts</option>
-            </select>
-            <button class="sort-btn" onclick="changerOrdre()" id="ordreBtn">⬇️ Décroissant</button>
-            <button class="sort-btn" onclick="resetDonnees()" style="background: #e74c3c; color: white; border-color: #c0392b;">⚠️ Réinitialiser</button>
-        </div>
-        
         <!-- Tableau -->
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Compétiteur <span class="detail-hint">cliquez</span></th>
+                    <th>Compétiteur</th>
                     <th>Institut</th>
                     <th>Score Total</th>
-                    <th>Nb Essais</th>
+                    <th>Essais</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -583,55 +203,59 @@
         <!-- Stats -->
         <div class="stats" id="stats">
             <span id="totalCount">0 compétiteurs</span>
-            <span id="totalEssaisStats">0 essais</span>
+            <span id="totalEssais">0 essais</span>
             <span id="moyenne">Moyenne: 0</span>
             <span id="meilleur">Meilleur: —</span>
-        </div>
-        
-        <!-- QR Code -->
-        <div class="qr-section">
-            <h3>📱 QR CODE VISITEURS</h3>
-            <div id="qrcode"></div>
-            <p style="color: #666;">Scannez pour voir les scores en direct</p>
-        </div>
-    </div>
-    
-    <!-- Modal détails (avec possibilité de modifier nom et institut) -->
-    <div id="essaisModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalNom">Détail des essais</h2>
-                <button class="close-btn" onclick="fermerModal()">&times;</button>
-            </div>
-            <div id="modalContenu"></div>
         </div>
     </div>
     
     <script>
-        const STORAGE_KEY = 'scores_essais_complets';
-        let competitors = [];
-        let ordreDescendant = true;
-        let filtreInstitut = 'all';
+        // ===== CONFIGURATION FIREBASE =====
+        // REMPLACEZ CES VALEURS AVEC VOS PROPRES CLÉS !
+        const firebaseConfig = {
+            apiKey: "AIzaSyB...",  // REMPLACEZ ICI
+            authDomain: "votre-projet.firebaseapp.com",  // REMPLACEZ ICI
+            databaseURL: "https://votre-projet-default-rtdb.firebaseio.com",  // REMPLACEZ ICI
+            projectId: "votre-projet",  // REMPLACEZ ICI
+            storageBucket: "votre-projet.appspot.com",  // REMPLACEZ ICI
+            messagingSenderId: "123456789",  // REMPLACEZ ICI
+            appId: "1:123456789:web:abc123"  // REMPLACEZ ICI
+        };
         
-        // Charger les données
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const scoresRef = database.ref('competition/scores');
+        
+        // ===== VARIABLES =====
+        let competitors = [];
+        
+        // ===== CHARGEMENT INITIAL =====
         function loadData() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    competitors = JSON.parse(saved);
-                } catch(e) {
-                    console.error('Erreur chargement', e);
+            // Écouter les changements en TEMPS RÉEL
+            scoresRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    competitors = data;
+                    console.log("✅ Données reçues de Firebase:", competitors.length, "compétiteurs");
+                } else {
+                    // Première fois - données par défaut
                     setDefaultData();
                 }
-            } else {
-                setDefaultData();
-            }
-            renderTable();
-            updateSelect();
-            updateFiltreInstitut();
-            updateStatsCompteurs();
+                renderTable();
+                updateSelect();
+            }, (error) => {
+                console.error("❌ Erreur Firebase:", error);
+                // Fallback sur localStorage
+                const saved = localStorage.getItem('scores_backup');
+                if (saved) {
+                    competitors = JSON.parse(saved);
+                    renderTable();
+                }
+            });
         }
         
+        // ===== DONNÉES PAR DÉFAUT =====
         function setDefaultData() {
             competitors = [
                 { id: '1', name: 'Léa', institut: 'INSAT', essais: [85, 92, 78] },
@@ -639,90 +263,34 @@
                 { id: '3', name: 'Inès', institut: 'FST', essais: [92, 88, 96] },
                 { id: '4', name: 'Raj', institut: 'ISSAT', essais: [65, 72, 80] }
             ];
-            saveData();
+            saveToFirebase();
         }
         
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(competitors));
-            updateSelect();
-            updateStatsCompteurs();
+        // ===== SAUVEGARDER DANS FIREBASE =====
+        function saveToFirebase() {
+            scoresRef.set(competitors)
+                .then(() => {
+                    console.log("✅ Sauvegardé dans Firebase");
+                    // Backup localStorage
+                    localStorage.setItem('scores_backup', JSON.stringify(competitors));
+                })
+                .catch(error => {
+                    console.error("❌ Erreur sauvegarde Firebase:", error);
+                });
         }
         
-        function updateStatsCompteurs() {
-            const totalEssais = competitors.reduce((acc, c) => acc + c.essais.length, 0);
-            document.getElementById('totalEssais').textContent = `${totalEssais} essais`;
-        }
-        
-        function updateFiltreInstitut() {
-            const instituts = [...new Set(competitors.map(c => c.institut))];
-            const select = document.getElementById('filtreInstitut');
-            let options = '<option value="all">Tous les instituts</option>';
-            instituts.forEach(inst => {
-                options += `<option value="${inst}">${inst}</option>`;
-            });
-            select.innerHTML = options;
-            select.value = filtreInstitut;
-        }
-        
-        function updateSelect() {
-            const select = document.getElementById('selectCompetiteur');
-            let options = '<option value="">Choisir un compétiteur</option>';
-            competitors.forEach(comp => {
-                options += `<option value="${comp.id}">${comp.name} (${comp.institut}) - ${comp.essais.length} essais</option>`;
-            });
-            select.innerHTML = options;
-        }
-        
-        window.appliquerFiltre = function() {
-            filtreInstitut = document.getElementById('filtreInstitut').value;
-            renderTable();
-        };
-        
-        function calculerTotal(essais) {
-            return essais.reduce((sum, val) => sum + val, 0);
-        }
-        
-        function getCompetiteursFiltres() {
-            let filtered = competitors;
-            if (filtreInstitut !== 'all') {
-                filtered = competitors.filter(c => c.institut === filtreInstitut);
-            }
-            
-            return filtered.sort((a, b) => {
-                const totalA = calculerTotal(a.essais);
-                const totalB = calculerTotal(b.essais);
-                return ordreDescendant ? totalB - totalA : totalA - totalB;
-            });
-        }
-        
-        window.changerOrdre = function() {
-            ordreDescendant = !ordreDescendant;
-            document.getElementById('ordreBtn').textContent = ordreDescendant ? '⬇️ Décroissant' : '⬆️ Croissant';
-            renderTable();
-        };
-        
-        window.verifierNomUnique = function() {
-            const nom = document.getElementById('nomInput').value.trim();
-            const creerBtn = document.getElementById('creerBtn');
-            if (nom && competitors.some(c => c.name.toLowerCase() === nom.toLowerCase())) {
-                showMessage('warning', 'Ce nom existe déjà !');
-                creerBtn.disabled = true;
-            } else {
-                creerBtn.disabled = false;
-            }
-        };
-        
+        // ===== CRÉER COMPÉTITEUR =====
         window.creerCompetiteur = function() {
             const nom = document.getElementById('nomInput').value.trim();
             const institut = document.getElementById('institutInput').value.trim() || 'Non spécifié';
             
             if (!nom) {
-                showMessage('warning', 'Entrez un nom');
+                alert('Entrez un nom');
                 return;
             }
             
             if (competitors.some(c => c.name.toLowerCase() === nom.toLowerCase())) {
-                showMessage('warning', 'Ce nom existe déjà');
+                alert('Ce nom existe déjà');
                 return;
             }
             
@@ -734,36 +302,34 @@
             };
             
             competitors.push(newComp);
-            saveData();
-            renderTable();
-            showMessage('success', `Compétiteur "${nom}" créé avec 0 essai`);
+            saveToFirebase();
             document.getElementById('nomInput').value = '';
         };
         
+        // ===== AJOUTER ESSAI =====
         window.ajouterEssai = function() {
             const compId = document.getElementById('selectCompetiteur').value;
             const score = parseInt(document.getElementById('essaiInput').value);
             
             if (!compId) {
-                showMessage('warning', 'Choisissez un compétiteur');
+                alert('Choisissez un compétiteur');
                 return;
             }
             
             if (isNaN(score) || score < 0) {
-                showMessage('warning', 'Score invalide');
+                alert('Score invalide');
                 return;
             }
             
             const comp = competitors.find(c => c.id === compId);
             if (comp) {
                 comp.essais.push(score);
-                saveData();
-                renderTable();
-                showMessage('success', `Essai #${comp.essais.length} ajouté à ${comp.name}`);
+                saveToFirebase();
                 document.getElementById('essaiInput').value = '0';
             }
         };
         
+        // ===== AJOUTER ESSAI RAPIDE =====
         window.ajouterEssaiRapide = function(id) {
             const score = prompt('Score du nouvel essai:', '0');
             if (score !== null) {
@@ -771,327 +337,144 @@
                 if (!isNaN(val) && val >= 0) {
                     const comp = competitors.find(c => c.id === id);
                     comp.essais.push(val);
-                    saveData();
-                    renderTable();
-                    showMessage('success', `Essai #${comp.essais.length} ajouté`);
+                    saveToFirebase();
                 }
             }
         };
         
-        // ===== NOUVELLES FONCTIONS POUR MODIFIER NOM ET INSTITUT =====
-        
-        window.modifierNomInstitut = function(id) {
-            const comp = competitors.find(c => c.id === id);
-            if (!comp) return;
-            
-            const nouveauNom = prompt("Modifier le nom:", comp.name);
-            if (nouveauNom !== null && nouveauNom.trim() !== '') {
-                // Vérifier si le nouveau nom existe déjà (sauf si c'est le même)
-                if (nouveauNom.trim().toLowerCase() !== comp.name.toLowerCase() && 
-                    competitors.some(c => c.name.toLowerCase() === nouveauNom.trim().toLowerCase())) {
-                    showMessage('warning', 'Ce nom existe déjà !');
-                    return;
-                }
-                comp.name = nouveauNom.trim();
+        // ===== SUPPRIMER COMPÉTITEUR =====
+        window.supprimerCompetiteur = function(id) {
+            if (confirm('Supprimer ce compétiteur ?')) {
+                competitors = competitors.filter(c => c.id !== id);
+                saveToFirebase();
             }
-            
-            const nouvelInstitut = prompt("Modifier l'institut:", comp.institut);
-            if (nouvelInstitut !== null && nouvelInstitut.trim() !== '') {
-                comp.institut = nouvelInstitut.trim();
-            }
-            
-            saveData();
-            renderTable();
-            afficherDetails(id); // Rafraîchir la modal
-            showMessage('success', 'Informations mises à jour');
         };
         
+        // ===== MODIFIER ESSAI =====
         window.modifierEssai = function(id, index) {
             const comp = competitors.find(c => c.id === id);
-            const newScore = prompt(`Modifier essai #${index + 1} (${comp.essais[index]}):`, comp.essais[index]);
+            const newScore = prompt(`Modifier essai #${index + 1}:`, comp.essais[index]);
             if (newScore !== null) {
                 const val = parseInt(newScore);
                 if (!isNaN(val) && val >= 0) {
                     comp.essais[index] = val;
-                    saveData();
-                    renderTable();
-                    afficherDetails(id);
+                    saveToFirebase();
                 }
             }
         };
         
+        // ===== SUPPRIMER ESSAI =====
         window.supprimerEssai = function(id, index) {
             if (confirm('Supprimer cet essai ?')) {
                 const comp = competitors.find(c => c.id === id);
                 comp.essais.splice(index, 1);
-                saveData();
-                renderTable();
-                afficherDetails(id);
+                saveToFirebase();
             }
         };
         
-        window.supprimerCompetiteur = function(id) {
-            if (confirm('Supprimer ce compétiteur ?')) {
-                competitors = competitors.filter(c => c.id !== id);
-                saveData();
-                renderTable();
-                fermerModal();
-            }
-        };
-        
-        window.afficherDetails = function(id) {
-            const comp = competitors.find(c => c.id === id);
-            if (!comp) return;
-            
-            document.getElementById('modalNom').textContent = `${comp.name} (${comp.institut})`;
-            
-            let html = `
-                <div class="edit-form">
-                    <h4>✏️ Modifier les informations</h4>
-                    <button class="btn btn-edit" onclick="modifierNomInstitut('${id}')" style="width: 100%;">
-                        ✏️ Modifier nom et institut
-                    </button>
-                </div>
-                
-                <p><strong>Total:</strong> ${calculerTotal(comp.essais)}</p>
-                <p><strong>Nombre d'essais:</strong> ${comp.essais.length}</p>
-                <div style="max-height: 300px; overflow-y: auto;">
-            `;
-            
-            if (comp.essais.length === 0) {
-                html += '<p class="zero-essai">Aucun essai</p>';
-            } else {
-                comp.essais.forEach((essai, i) => {
-                    html += `
-                        <div class="essai-item">
-                            <span>Essai #${i + 1}: ${essai}</span>
-                            <div>
-                                <button class="btn btn-primary" onclick="modifierEssai('${id}', ${i})">✏️</button>
-                                <button class="btn btn-danger" onclick="supprimerEssai('${id}', ${i})">🗑️</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            
-            html += `</div>
-                <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button class="btn btn-success" onclick="ajouterEssaiRapide('${id}')" style="flex: 1;">➕ Ajouter essai</button>
-                    <button class="btn btn-danger" onclick="supprimerCompetiteur('${id}')" style="flex: 1;">🗑️ Supprimer compétiteur</button>
-                </div>
-            `;
-            
-            document.getElementById('modalContenu').innerHTML = html;
-            document.getElementById('essaisModal').style.display = 'block';
-        };
-        
-        window.fermerModal = function() {
-            document.getElementById('essaisModal').style.display = 'none';
-        };
-        
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            const filtered = getCompetiteursFiltres();
-            
-            let html = '';
-            if (filtered.length === 0) {
-                html = '<tr><td colspan="6" style="text-align: center; padding: 40px;">📭 Aucun compétiteur</td></tr>';
-            } else {
-                filtered.forEach((comp, index) => {
-                    const total = calculerTotal(comp.essais);
-                    let rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-                    
-                    html += `
-                        <tr>
-                            <td class="rank ${rankClass}">#${index + 1}</td>
-                            <td>
-                                <span class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</span>
-                                <span class="essais-indicator">📊 ${comp.essais.length}</span>
-                            </td>
-                            <td><span class="institut-badge">${comp.institut}</span></td>
-                            <td class="score">${total}</td>
-                            <td>${comp.essais.length}</td>
-                            <td>
-                                <button class="btn btn-essai" onclick="ajouterEssaiRapide('${comp.id}')">➕ Essai</button>
-                                <button class="btn btn-edit" onclick="modifierNomInstitut('${comp.id}')">✏️</button>
-                                <button class="btn btn-danger" onclick="supprimerCompetiteur('${comp.id}')">🗑️</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-            
-            tbody.innerHTML = html;
-            updateStats(filtered);
+        // ===== CALCULER TOTAL =====
+        function calculerTotal(essais) {
+            return essais.reduce((s, v) => s + v, 0);
         }
         
-        function updateStats(filtered) {
+        // ===== METTRE À JOUR SELECT =====
+        function updateSelect() {
+            const select = document.getElementById('selectCompetiteur');
+            let options = '<option value="">Choisir un compétiteur</option>';
+            competitors.forEach(comp => {
+                options += `<option value="${comp.id}">${comp.name} (${comp.institut}) - ${comp.essais.length} essais</option>`;
+            });
+            select.innerHTML = options;
+        }
+        
+        // ===== RENDU TABLEAU =====
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            
+            if (!competitors || competitors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucun compétiteur</td></tr>';
+                updateStats();
+                return;
+            }
+            
+            // Trier par score total décroissant
+            const sorted = [...competitors].sort((a, b) => 
+                calculerTotal(b.essais) - calculerTotal(a.essais)
+            );
+            
+            let html = '';
+            sorted.forEach((comp, index) => {
+                const total = calculerTotal(comp.essais);
+                let rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                
+                html += `
+                    <tr>
+                        <td class="${rankClass}">#${index + 1}</td>
+                        <td>
+                            <span class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</span>
+                        </td>
+                        <td><span class="institut-badge">${comp.institut}</span></td>
+                        <td><strong>${total}</strong></td>
+                        <td>${comp.essais.length}</td>
+                        <td>
+                            <button class="btn btn-success btn-small" onclick="ajouterEssaiRapide('${comp.id}')">➕</button>
+                            <button class="btn btn-danger btn-small" onclick="supprimerCompetiteur('${comp.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+            updateStats(sorted);
+        }
+        
+        // ===== METTRE À JOUR STATS =====
+        function updateStats(sorted) {
             const totalCompetiteurs = competitors.length;
             const totalEssais = competitors.reduce((acc, c) => acc + c.essais.length, 0);
             
             document.getElementById('totalCount').textContent = `${totalCompetiteurs} compétiteurs`;
-            document.getElementById('totalEssaisStats').textContent = `${totalEssais} essais`;
-            document.getElementById('importCount').textContent = `${totalCompetiteurs} compétiteurs`;
+            document.getElementById('totalEssais').textContent = `${totalEssais} essais`;
             
-            if (filtered.length > 0) {
-                const sum = filtered.reduce((acc, c) => acc + calculerTotal(c.essais), 0);
-                document.getElementById('moyenne').textContent = `Moyenne: ${Math.round(sum / filtered.length)}`;
+            if (sorted && sorted.length > 0) {
+                const sum = sorted.reduce((acc, c) => acc + calculerTotal(c.essais), 0);
+                document.getElementById('moyenne').textContent = `Moyenne: ${Math.round(sum / sorted.length)}`;
                 
-                const best = filtered[0];
+                const best = sorted[0];
                 document.getElementById('meilleur').textContent = `Meilleur: ${best.name} (${calculerTotal(best.essais)})`;
             }
         }
         
-        function showMessage(type, text) {
-            const msg = document.getElementById(type === 'warning' ? 'warningMessage' : 'successMessage');
-            msg.textContent = type === 'warning' ? '⚠️ ' + text : '✅ ' + text;
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
-        }
-        
-        window.importerFichier = function() {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) {
-                showMessage('warning', 'Choisissez un fichier');
-                return;
-            }
+        // ===== AFFICHER DÉTAILS =====
+        window.afficherDetails = function(id) {
+            const comp = competitors.find(c => c.id === id);
+            if (!comp) return;
             
-            const reader = new FileReader();
-            reader.onload = e => {
-                const resultat = importerListe(e.target.result);
-                if (resultat > 0) {
-                    showMessage('success', `${resultat} compétiteurs importés avec tous leurs essais`);
-                }
-            };
-            reader.readAsText(file);
+            let details = `📊 ${comp.name} (${comp.institut})\n`;
+            details += `Total: ${calculerTotal(comp.essais)}\n`;
+            details += `Essais: ${comp.essais.join(', ')}`;
+            alert(details);
         };
         
-        window.importerTexte = function() {
-            const texte = document.getElementById('texteImport').value;
-            if (!texte.trim()) {
-                showMessage('warning', 'Collez du texte');
-                return;
-            }
-            const resultat = importerListe(texte);
-            if (resultat > 0) {
-                showMessage('success', `${resultat} compétiteurs importés avec tous leurs essais`);
-            }
-            document.getElementById('texteImport').value = '';
-        };
-        
-        function importerListe(contenu) {
-            const lignes = contenu.split('\n');
-            let nouveaux = [];
-            let doublons = [];
-            let totalImportes = 0;
-            
-            lignes.forEach((ligne, idx) => {
-                ligne = ligne.trim();
-                if (!ligne || ligne.startsWith('#')) return;
-                
-                const parties = ligne.split(',').map(s => s.trim());
-                if (parties.length >= 2) {
-                    const nom = parties[0];
-                    const institut = parties[1] || 'Non spécifié';
-                    const essais = parties.slice(2).map(s => parseInt(s) || 0).filter(v => !isNaN(v));
-                    
-                    if (nom && !competitors.some(c => c.name.toLowerCase() === nom.toLowerCase())) {
-                        nouveaux.push({
-                            id: Date.now() + '-' + Math.random() + '-' + idx,
-                            name: nom,
-                            institut: institut,
-                            essais: essais
-                        });
-                        totalImportes++;
-                    } else if (nom) {
-                        doublons.push(nom);
-                    }
-                }
-            });
-            
-            if (nouveaux.length > 0) {
-                competitors = [...competitors, ...nouveaux];
-                saveData();
-                renderTable();
-            }
-            
-            document.getElementById('fileInput').value = '';
-            return totalImportes;
-        }
-        
-        window.exporterFichier = function() {
-            let contenu = '# SAUVEGARDE COMPLÈTE - ' + new Date().toLocaleString() + '\n';
-            contenu += '# Format: Nom,Institut,Essai1,Essai2,Essai3,...\n\n';
-            
-            competitors.forEach(comp => {
-                const essaisStr = comp.essais.join(',');
-                contenu += `${comp.name},${comp.institut}${essaisStr ? ',' + essaisStr : ''}\n`;
-            });
-            
-            const blob = new Blob([contenu], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sauvegarde_competition_${new Date().toISOString().slice(0,10)}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            showMessage('success', `Exporté ${competitors.length} compétiteurs avec tous leurs essais`);
-        };
-        
-        window.exporterJSON = function() {
-            const sauvegarde = {
-                date: new Date().toISOString(),
-                version: '1.0',
-                competiteurs: competitors
-            };
-            
-            const blob = new Blob([JSON.stringify(sauvegarde, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sauvegarde_complete_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            showMessage('success', 'Sauvegarde JSON exportée');
-        };
-        
-        window.resetDonnees = function() {
-            if (confirm('⚠️ Réinitialiser toutes les données ? Cette action est irréversible.')) {
-                localStorage.removeItem(STORAGE_KEY);
-                setDefaultData();
-                renderTable();
-                showMessage('success', 'Données réinitialisées');
-            }
-        };
-        
-        window.addEventListener('storage', e => {
-            if (e.key === STORAGE_KEY) {
-                loadData();
-            }
-        });
-        
-        window.onclick = e => {
-            if (e.target === document.getElementById('essaisModal')) {
-                fermerModal();
-            }
-        };
-        
+        // ===== GÉNÉRER QR CODE FIXE =====
         function genererQR() {
-            const url = window.location.href.replace('admin.html', 'visiteur.html');
+            const baseUrl = window.location.href.replace('admin.html', 'index.html');
+            document.getElementById('visitorUrl').textContent = baseUrl;
+            
             const qrDiv = document.getElementById('qrcode');
             qrDiv.innerHTML = '';
             new QRCode(qrDiv, {
-                text: url,
+                text: baseUrl,
                 width: 200,
                 height: 200
             });
         }
         
-        loadData();
-        genererQR();
-        setInterval(loadData, 2000);
+        // ===== INITIALISATION =====
+        window.onload = function() {
+            genererQR();
+            loadData();
+        };
     </script>
 </body>
 </html>
