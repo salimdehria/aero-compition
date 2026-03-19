@@ -3,270 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👁️ VISITEUR - Compétition</title>
+    <title>👁️ AERO COMPÉTITION</title>
+    <!-- Firebase SDK (version 8 - plus simple) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 15px;
-            background: #2c3e50;
-            min-height: 100vh;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 25px;
+            margin: 0;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 600px;
+            background: #2c3e50;
         }
-        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+        }
         h1 {
             color: #2c3e50;
-            border-bottom: 4px solid #2c3e50;
-            padding-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
             text-align: center;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 10px;
         }
-        
-        .visitor-badge {
-            background: #2c3e50;
-            color: white;
-            padding: 6px 15px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-        }
-        
-        .institut-badge {
-            background: #3498db;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            display: inline-block;
-        }
-        
-        .info-box {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 15px;
-            margin: 15px 0;
-            text-align: center;
-            border: 2px solid #2c3e50;
-        }
-        
-        .sync-badge {
+        .badge {
             background: #27ae60;
             color: white;
-            padding: 8px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            margin: 10px 0;
+            padding: 5px 10px;
+            border-radius: 20px;
             text-align: center;
-            animation: pulse 2s infinite;
+            margin: 10px 0;
         }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-        
-        .table-wrapper {
-            overflow-x: auto;
-            margin: 15px 0;
-            border-radius: 12px;
-        }
-        
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            min-width: 320px;
+            margin: 20px 0;
         }
-        
         th {
             background: #2c3e50;
             color: white;
-            padding: 12px 8px;
-            text-align: left;
-            font-size: 0.85rem;
+            padding: 10px;
         }
-        
         td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #eef2f7;
-            font-size: 0.9rem;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
         }
-        
         .clickable-name {
             cursor: pointer;
-            color: #2c3e50;
+            color: #3498db;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
-        
-        .clickable-name::after {
-            content: "👆";
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-        
-        .score {
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 1.1rem;
-        }
-        
-        .rank-1 { color: #f1c40f; font-weight: bold; }
-        .rank-2 { color: #bdc3c7; font-weight: bold; }
-        .rank-3 { color: #e67e22; font-weight: bold; }
-        
-        .stats {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 10px;
-            text-align: center;
-        }
-        
         .podium {
             display: flex;
-            justify-content: center;
             gap: 10px;
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8faff;
-            border-radius: 15px;
-            flex-wrap: wrap;
+            margin: 20px 0;
         }
-        
         .podium-item {
-            text-align: center;
-            padding: 12px 8px;
-            border-radius: 12px;
-            min-width: 100px;
-            cursor: pointer;
             flex: 1;
-            max-width: 120px;
-        }
-        
-        .podium-1 { background: #f1c40f; }
-        .podium-2 { background: #bdc3c7; }
-        .podium-3 { background: #e67e22; color: white; }
-        
-        .podium-item div:first-child { font-size: 1.8rem; }
-        .podium-item div:nth-child(2) { font-weight: bold; }
-        .podium-item div:nth-child(3) { font-size: 1.2rem; font-weight: bold; }
-        
-        select {
-            padding: 12px 15px;
-            border-radius: 12px;
-            border: 2px solid #2c3e50;
-            font-size: 1rem;
-            width: 100%;
-            margin: 10px 0;
-        }
-        
-        .refresh-info {
-            background: #3498db;
-            color: white;
+            text-align: center;
             padding: 10px;
-            border-radius: 30px;
-            text-align: center;
-            margin: 15px 0;
-            font-size: 0.9rem;
+            border-radius: 10px;
         }
-        
-        .essai-count {
-            background: #e8f4fd;
-            padding: 2px 6px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        .podium-1 { background: gold; }
+        .podium-2 { background: silver; }
+        .podium-3 { background: #cd7f32; color: white; }
+        select {
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            padding: 15px;
-        }
-        
-        .modal-content {
-            background: white;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border-radius: 25px;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #2c3e50;
-            padding-bottom: 12px;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-        }
-        
-        .essai-item {
-            padding: 12px;
-            margin: 8px 0;
-            background: #f0f5fa;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
         }
     </style>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>
-            👁️ ESPACE VISITEUR
-            <span class="visitor-badge">Lecture seule</span>
-        </h1>
-        
-        <div class="sync-badge">
-            🔄 Mise à jour AUTOMATIQUE en temps réel
-        </div>
-        
-        <div class="info-box">
-            <p>👆 Cliquez sur les noms pour voir les essais</p>
-            <p>📱 Les scores se mettent à jour automatiquement</p>
-        </div>
+        <h1>🏆 AERO COMPÉTITION</h1>
+        <div class="badge">🔄 Mise à jour en temps réel</div>
         
         <select id="filtreInstitut" onchange="appliquerFiltre()">
             <option value="all">Tous les instituts</option>
@@ -274,202 +88,128 @@
         
         <div id="podium" class="podium"></div>
         
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Compétiteur</th>
-                        <th>Institut</th>
-                        <th>Score</th>
-                        <th>Essais</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="5" style="text-align: center;">Chargement...</td></tr>
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Institut</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="4">Chargement...</td></tr>
+            </tbody>
+        </table>
         
-        <div class="stats" id="stats">
-            <span id="totalCount">0</span>
-            <span id="moyenne">Moyenne: 0</span>
-            <span id="meilleur">Meilleur: —</span>
-        </div>
-        
-        <div class="refresh-info">
-            🔄 Connexion en temps réel établie
+        <div id="stats" style="background: #2c3e50; color: white; padding: 10px; border-radius: 8px; text-align: center;">
+            <span id="totalCount">0 participants</span>
         </div>
     </div>
-    
-    <!-- Modal détails -->
-    <div id="essaisModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalNom">Détail</h2>
-                <button class="close-btn" onclick="fermerModal()">&times;</button>
-            </div>
-            <div id="modalContenu"></div>
-        </div>
-    </div>
-    
+
     <script>
-        // ===== CONFIGURATION FIREBASE (MÊME QUE DANS ADMIN) =====
+        // Configuration Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyB...",  // REMPLACEZ AVEC VOS CLÉS
-            authDomain: "votre-projet.firebaseapp.com",
-            databaseURL: "https://votre-projet-default-rtdb.firebaseio.com",
-            projectId: "votre-projet",
-            storageBucket: "votre-projet.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abc123"
+            apiKey: "AIzaSyCUncMgmG6g3Xl7drWotu2v4zPaf8fCLP0",
+            authDomain: "aero-compition.firebaseapp.com",
+            databaseURL: "https://aero-compition-default-rtdb.firebaseio.com",
+            projectId: "aero-compition",
+            storageBucket: "aero-compition.firebasestorage.app",
+            messagingSenderId: "717421617215",
+            appId: "1:717421617215:web:64d54ebb8bba5a52a6d88a"
         };
-        
+
         // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const scoresRef = database.ref('competition/scores');
-        
-        // ===== VARIABLES =====
+
         let competitors = [];
         let filtreInstitut = 'all';
-        
-        // ===== DONNÉES PAR DÉFAUT (si Firebase vide) =====
+
+        // Données par défaut
         const DEFAULT_DATA = [
-            { id: '1', name: 'Léa', institut: 'INSAT', essais: [85, 92, 78] },
-            { id: '2', name: 'Thomas', institut: 'ENIT', essais: [75, 88, 95] },
-            { id: '3', name: 'Inès', institut: 'FST', essais: [92, 88, 96] }
+            { id: '1', name: 'Participant 1', institut: 'AERO', essais: [10, 20, 30] }
         ];
-        
-        // ===== ÉCOUTE EN TEMPS RÉEL =====
+
+        // Écouter les changements
         scoresRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data && data.length > 0) {
                 competitors = data;
-                console.log("✅ Mise à jour reçue de Firebase:", competitors.length, "compétiteurs");
             } else {
                 competitors = DEFAULT_DATA;
             }
             updateFiltre();
             renderTable();
         });
-        
-        // ===== FILTRE =====
+
         function updateFiltre() {
             const instituts = [...new Set(competitors.map(c => c.institut))];
             const select = document.getElementById('filtreInstitut');
             let options = '<option value="all">Tous les instituts</option>';
             instituts.forEach(i => options += `<option value="${i}">${i}</option>`);
             select.innerHTML = options;
-            select.value = filtreInstitut;
         }
-        
+
         window.appliquerFiltre = function() {
             filtreInstitut = document.getElementById('filtreInstitut').value;
             renderTable();
         };
-        
+
         function calculerTotal(essais) {
             return essais.reduce((s, v) => s + v, 0);
         }
-        
-        function getData() {
+
+        function renderTable() {
             let filtered = competitors;
             if (filtreInstitut !== 'all') {
                 filtered = competitors.filter(c => c.institut === filtreInstitut);
             }
-            return filtered.sort((a, b) => calculerTotal(b.essais) - calculerTotal(a.essais));
-        }
-        
-        function renderTable() {
-            const data = getData();
-            const tbody = document.getElementById('tableBody');
-            
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Aucun compétiteur</td></tr>';
-            } else {
-                let html = '';
-                data.forEach((comp, i) => {
-                    const total = calculerTotal(comp.essais);
-                    let rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
-                    
-                    html += `
-                        <tr>
-                            <td class="${rankClass}">#${i + 1}</td>
-                            <td>
-                                <span class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</span>
-                            </td>
-                            <td><span class="institut-badge">${comp.institut}</span></td>
-                            <td class="score">${total}</td>
-                            <td><span class="essai-count">${comp.essais.length}</span></td>
-                        </tr>
-                    `;
-                });
-                tbody.innerHTML = html;
-            }
-            
+            const sorted = filtered.sort((a, b) => calculerTotal(b.essais) - calculerTotal(a.essais));
+
+            // Tableau
+            let html = '';
+            sorted.forEach((comp, i) => {
+                html += `
+                    <tr>
+                        <td>#${i + 1}</td>
+                        <td class="clickable-name" onclick="afficherDetails('${comp.id}')">${comp.name}</td>
+                        <td>${comp.institut}</td>
+                        <td><strong>${calculerTotal(comp.essais)}</strong></td>
+                    </tr>
+                `;
+            });
+            document.getElementById('tableBody').innerHTML = html;
+
             // Podium
-            const podium = document.getElementById('podium');
-            if (data.length >= 3) {
-                podium.innerHTML = '';
+            if (sorted.length >= 3) {
+                let podiumHtml = '';
                 for (let i = 0; i < 3; i++) {
-                    const comp = data[i];
-                    podium.innerHTML += `
+                    const comp = sorted[i];
+                    podiumHtml += `
                         <div class="podium-item podium-${i+1}" onclick="afficherDetails('${comp.id}')">
                             <div>${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</div>
                             <div>${comp.name}</div>
                             <div>${calculerTotal(comp.essais)}</div>
-                            <div>${comp.institut}</div>
                         </div>
                     `;
                 }
-            } else {
-                podium.innerHTML = '';
+                document.getElementById('podium').innerHTML = podiumHtml;
             }
-            
+
             // Stats
-            document.getElementById('totalCount').innerHTML = `<span>${data.length} compétiteurs</span>`;
-            if (data.length > 0) {
-                const sum = data.reduce((a, c) => a + calculerTotal(c.essais), 0);
-                document.getElementById('moyenne').innerHTML = `<span>Moyenne: ${Math.round(sum / data.length)}</span>`;
-                const best = data[0];
-                document.getElementById('meilleur').innerHTML = `<span>Meilleur: ${best.name} (${calculerTotal(best.essais)})</span>`;
-            }
+            document.getElementById('totalCount').textContent = `${sorted.length} participants`;
         }
-        
+
         window.afficherDetails = function(id) {
             const comp = competitors.find(c => c.id === id);
             if (!comp) return;
             
-            document.getElementById('modalNom').innerHTML = `${comp.name} <small>${comp.institut}</small>`;
-            
-            let html = `
-                <p style="text-align: center; font-size: 1.3rem; font-weight: bold;">
-                    Total: ${calculerTotal(comp.essais)}
-                </p>
-                <p style="font-weight: bold;">📊 ${comp.essais.length} essais :</p>
-            `;
-            
-            if (comp.essais.length === 0) {
-                html += '<p style="text-align: center;">Aucun essai</p>';
-            } else {
-                comp.essais.forEach((e, i) => {
-                    html += `<div class="essai-item">Essai #${i + 1}: <strong>${e}</strong></div>`;
-                });
-            }
-            
-            document.getElementById('modalContenu').innerHTML = html;
-            document.getElementById('essaisModal').style.display = 'block';
-        };
-        
-        window.fermerModal = function() {
-            document.getElementById('essaisModal').style.display = 'none';
-        };
-        
-        window.onclick = function(e) {
-            if (e.target === document.getElementById('essaisModal')) {
-                fermerModal();
-            }
+            let msg = `${comp.name} (${comp.institut})\n`;
+            msg += `Total: ${calculerTotal(comp.essais)}\n`;
+            msg += `Essais: ${comp.essais.join(', ')}`;
+            alert(msg);
         };
     </script>
 </body>
